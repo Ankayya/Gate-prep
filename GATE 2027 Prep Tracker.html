@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GATE 2027 Prep Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f7;--card:#fff;--ink:#14213d;--mute:#5d6b82;--line:#d7dde6;--acc:#0f7f86;--accbg:#dff1f2;--bad:#b3402a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--card:#17213a;--ink:#e8edf6;--mute:#9aa8c0;--line:#2a3652;--acc:#4cc2c9;--accbg:#173b4a;--bad:#ef8a72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1624;--card:#17213a;--ink:#e8edf6;--mute:#9aa8c0;--line:#2a3652;--acc:#4cc2c9;--accbg:#173b4a;--bad:#ef8a72;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 2px;font-weight:600}
+h2{font-size:16px;margin:0 0 10px;font-weight:600}
+.sub{color:var(--mute);margin:0 0 16px}
+.hero{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.days{font-size:64px;line-height:1;font-weight:600;color:var(--acc)}
+.days small{display:block;font-size:14px;color:var(--mute);font-weight:400;margin-top:4px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:220px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;flex:1;min-width:90px}
+.stat b{font-size:20px;display:block}.stat span{color:var(--mute);font-size:12px}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font:inherit;color:var(--mute);cursor:pointer}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--acc);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;max-width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:500}
+:root:not([data-theme="light"]) .btn{color:#0f1624}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:6px;padding:4px 9px;cursor:pointer;font-size:13px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;background:var(--acc)}
+.subj{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.subj:first-child{border-top:0}.subj .n{flex:1;min-width:140px}
+.mut{color:var(--mute);font-size:13px}
+.item{padding:10px 0;border-top:1px solid var(--line)}.item:first-child{border-top:0}
+.tag{display:inline-block;background:var(--accbg);color:var(--acc);border-radius:4px;padding:1px 7px;font-size:12px;margin-right:6px}
+.tag.bad{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.hidden{display:none}
+textarea{width:100%;min-height:56px}
+a{color:var(--acc)}
+.saved{font-size:12px;color:var(--mute);margin-top:20px}
+</style>
+</head>
+<body>
+<main>
+<h1>GATE 2027 prep tracker</h1>
+<p class="sub">Everything you enter is saved in this browser, so your progress is here when you come back.</p>
+
+<div class="hero">
+  <div class="days"><span id="days">–</span><small>days to exam · <input type="date" id="exam" aria-label="Exam date"></small></div>
+  <div class="stats">
+    <div class="stat"><b id="sSyl">0%</b><span>syllabus done</span></div>
+    <div class="stat"><b id="sStreak">0</b><span>day streak</span></div>
+    <div class="stat"><b id="sHrs">0</b><span>hours this week</span></div>
+  </div>
+</div>
+
+<div id="ring" class="card hidden" role="alert"><b id="ringT"></b> <button class="btn" id="stopRing">Stop alarm</button></div>
+<nav role="tablist">
+  <button role="tab" data-t="today" aria-selected="true">Today</button>
+  <button role="tab" data-t="syl" aria-selected="false">Syllabus</button>
+  <button role="tab" data-t="mock" aria-selected="false">Mock tests</button>
+  <button role="tab" data-t="err" aria-selected="false">Mistakes</button>
+  <button role="tab" data-t="alarm" aria-selected="false">Alarms</button>
+  <button role="tab" data-t="tt" aria-selected="false">Timetable</button>
+  <button role="tab" data-t="res" aria-selected="false">Resources</button>
+</nav>
+
+<section id="t-today">
+  <div class="card">
+    <h2>Log today's study</h2>
+    <div class="row">
+      <input type="number" id="lh" min="0" max="18" step="0.5" placeholder="Hours" style="width:90px" aria-label="Hours studied">
+      <input type="text" id="ls" placeholder="Subject / topic studied" style="flex:1;min-width:160px" aria-label="Topic studied">
+      <button class="btn" id="addLog">Save</button>
+    </div>
+    <div id="logs"></div>
+  </div>
+  <div class="card">
+    <h2>Today's goals</h2>
+    <div class="row"><input type="text" id="gi" placeholder="Add a goal for today" style="flex:1;min-width:160px"><button class="btn" id="addGoal">Add</button></div>
+    <div id="goals"></div>
+  </div>
+</section>
+
+<section id="t-syl" class="hidden">
+  <div class="card" id="setup">
+    <h2>Load your branch</h2>
+    <div class="row"><select id="branch" aria-label="Branch"><option value="">Choose branch</option><option>CSE</option><option>ECE</option><option>EE</option><option>ME</option><option>Civil</option></select>
+    <button class="btn" id="loadB">Load subjects</button></div>
+    <p class="mut">You can add or remove subjects at any time.</p>
+  </div>
+  <div class="card">
+    <h2>Subjects</h2>
+    <div class="bar"><i id="sylBar" style="width:0"></i></div>
+    <div id="subjs"></div>
+    <div class="row" style="margin-top:10px"><input type="text" id="ns" placeholder="Add subject" style="flex:1;min-width:160px"><button class="btn" id="addSubj">Add</button></div>
+  </div>
+</section>
+
+<section id="t-mock" class="hidden">
+  <div class="card">
+    <h2>Add a mock test</h2>
+    <div class="row">
+      <input type="text" id="mn" placeholder="Test name" style="flex:1;min-width:140px">
+      <input type="number" id="mm" placeholder="Marks" step="0.01" style="width:90px">
+      <input type="number" id="mt" placeholder="Out of" value="100" style="width:90px">
+    </div>
+    <div class="row"><input type="text" id="mw" placeholder="Weak areas seen in this test" style="flex:1;min-width:200px"><button class="btn" id="addMock">Save</button></div>
+  </div>
+  <div class="card"><h2>Score trend</h2><div id="mockTrend" class="mut">Add two or more tests to see your trend.</div><div id="mocks"></div></div>
+</section>
+
+<section id="t-err" class="hidden">
+  <div class="card">
+    <h2>Log a mistake</h2>
+    <div class="row">
+      <input type="text" id="et" placeholder="Subject / topic" style="flex:1;min-width:140px">
+      <select id="ek"><option>Concept gap</option><option>Silly mistake</option><option>Time pressure</option><option>Formula forgotten</option></select>
+    </div>
+    <textarea id="en" placeholder="What went wrong, and the correct idea"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" id="addErr">Save</button></div>
+  </div>
+  <div class="card"><h2>Mistake log</h2><div id="errs"></div></div>
+</section>
+
+<section id="t-tt" class="hidden">
+  <div class="card">
+    <h2>Weekday (Mon-Fri), office 9 to 8</h2>
+    <div class="item"><span class="tag">5:00-5:30</span>Wake up, freshen up</div>
+    <div class="item"><span class="tag">5:30-8:00</span>Study block: one subject, new topic or concept</div>
+    <div class="item"><span class="tag">8:00-8:45</span>Get ready, breakfast</div>
+    <div class="item"><span class="tag">Commute</span>Formula sheets, flashcards, error log</div>
+    <div class="item"><span class="tag">Lunch</span>20-30 minutes of General Aptitude</div>
+    <div class="item"><span class="tag">8:00 pm</span>Commute home, dinner</div>
+    <div class="item"><span class="tag">9:15-10:30</span>15-20 PYQs on the morning topic, log mistakes</div>
+    <div class="item"><span class="tag">10:45</span>Sleep</div>
+  </div>
+  <div class="card">
+    <h2>Saturday (about 8 hours)</h2>
+    <div class="item"><span class="tag">7:00-10:00</span>New topic or weak subject</div>
+    <div class="item"><span class="tag">10:30-1:00</span>PYQs and a sectional test</div>
+    <div class="item"><span class="tag">4:00-7:00</span>Second subject</div>
+    <div class="item"><span class="tag">8:00-9:00</span>Revise the week</div>
+  </div>
+  <div class="card">
+    <h2>Sunday</h2>
+    <div class="item">Early weeks: subject test or half-length mock, then analysis.</div>
+    <div class="item">From about day 35: full 3-hour mock at 9:30 am, then 3 hours of analysis. Keep the evening free.</div>
+  </div>
+  <div class="card">
+    <h2>75-day phases</h2>
+    <div class="item"><span class="tag">Days 1-40</span>Cover high-weightage subjects first, with topic-wise PYQs</div>
+    <div class="item"><span class="tag">Days 41-62</span>Revision, weak topics, one mock every Sunday</div>
+    <div class="item"><span class="tag">Days 63-75</span>Two mocks a week, light revision, no new topics</div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="addTT">Add weekday alarms from this timetable</button></div>
+  </div>
+</section>
+
+<section id="t-res" class="hidden">
+  <div class="card">
+    <h2>Free mock tests</h2>
+    <div class="item"><a href="https://hub.prepfusion.in/" target="_blank" rel="noopener">PrepFusion Hub</a> <span class="mut">your link</span></div>
+    <div class="item"><a href="https://mocktest.aglasem.com/exam/gate" target="_blank" rel="noopener">AglaSem GATE mock tests</a> <span class="mut">free, instant results</span></div>
+    <div class="item"><a href="https://prepp.in/test-series/GATE-65b1063a0e343da0a3c64cb5" target="_blank" rel="noopener">Prepp GATE test series</a> <span class="mut">a few free tests per branch</span></div>
+    <div class="item"><a href="https://www.selfstudys.com/page/gate-mock-test" target="_blank" rel="noopener">SelfStudys GATE mock tests</a> <span class="mut">short free sets</span></div>
+    <div class="item"><a href="https://testbook.com/amp/gate/mock-test" target="_blank" rel="noopener">Testbook free GATE mock</a></div>
+  </div>
+  <div class="card">
+    <h2>Free tutorials and syllabus</h2>
+    <div class="item"><a href="https://gate.nptel.ac.in/" target="_blank" rel="noopener">NPTEL GATE project</a> <span class="mut">free video lectures mapped to each GATE syllabus topic</span></div>
+  </div>
+  <div class="card">
+    <h2>Your own links</h2>
+    <div class="row"><input type="text" id="ln" placeholder="Name" style="width:140px"><input type="url" id="lu" placeholder="https://..." style="flex:1;min-width:160px"><button class="btn" id="addLink">Add</button></div>
+    <div id="links"></div>
+  </div>
+</section>
+
+<section id="t-alarm" class="hidden">
+  <div class="card">
+    <h2>Add an alarm</h2>
+    <div class="row"><input type="time" id="at" value="06:00" aria-label="Alarm time"><input type="text" id="al" placeholder="Label, e.g. Start morning study" style="flex:1;min-width:160px"><button class="btn" id="addAlarm">Add</button></div>
+    <div class="row"><button class="ghost" id="testAlarm">Test sound</button><button class="ghost" id="notif">Allow notifications</button></div>
+    <p class="mut">Alarms repeat every day and ring only while this page is open in your browser. For a wake-up alarm, also set one in your phone's clock app.</p>
+  </div>
+  <div class="card"><h2>Your alarms</h2><div id="alarms"></div></div>
+</section>
+
+<p class="saved" id="saved"></p>
+</main>
+
+<script>
+(function(){
+var KEY="gate2027v1",S;
+var PRE={CSE:["Engineering Mathematics","Discrete Mathematics","Digital Logic","Computer Organization","Programming & Data Structures","Algorithms","Theory of Computation","Compiler Design","Operating Systems","Databases","Computer Networks","General Aptitude"],
+ECE:["Engineering Mathematics","Networks","Signals & Systems","Electronic Devices","Analog Circuits","Digital Circuits","Control Systems","Communications","Electromagnetics","General Aptitude"],
+EE:["Engineering Mathematics","Electric Circuits","Electromagnetic Fields","Signals & Systems","Electrical Machines","Power Systems","Control Systems","Measurements","Analog & Digital Electronics","Power Electronics","General Aptitude"],
+ME:["Engineering Mathematics","Engineering Mechanics","Strength of Materials","Theory of Machines","Machine Design","Fluid Mechanics","Heat Transfer","Thermodynamics","Manufacturing","Industrial Engineering","General Aptitude"],
+Civil:["Engineering Mathematics","Engineering Mechanics","Structural Analysis","Concrete Structures","Steel Structures","Geotechnical","Fluid Mechanics","Environmental","Transportation","Surveying","General Aptitude"]};
+var ST=["Not started","Learning","Done","Revised"],W=[0,.4,.8,1];
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+ if(!S){var d=new Date();d.setDate(d.getDate()+75);S={exam:d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),subj:[],logs:[],goals:[],mocks:[],errs:[]}}}
+var warned=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));document.getElementById("saved").textContent="Saved just now"}catch(e){document.getElementById("saved").textContent="Could not save in this browser. Your data will be lost when you close the page."}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function uid(){return Date.now()+Math.random()}
+function del(arr,id){for(var i=0;i<arr.length;i++)if(arr[i].id===id){arr.splice(i,1);break}}
+
+function streakCalc(){var set={};S.logs.forEach(function(l){set[l.date]=1});var n=0,d=new Date();
+ if(!set[today()])d.setDate(d.getDate()-1);
+ while(true){var k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");if(set[k]){n++;d.setDate(d.getDate()-1)}else break}return n}
+function weekHrs(){var c=new Date();c.setDate(c.getDate()-6);var s=c.getFullYear()+"-"+String(c.getMonth()+1).padStart(2,"0")+"-"+String(c.getDate()).padStart(2,"0");
+ return S.logs.filter(function(l){return l.date>=s}).reduce(function(a,l){return a+l.h},0)}
+
+function render(){
+ renderAlarms();
+ $("exam").value=S.exam;
+ var left=Math.ceil((new Date(S.exam+"T00:00:00")-new Date(today()+"T00:00:00"))/864e5);
+ $("days").textContent=left>0?left:0;
+ var p=S.subj.length?Math.round(S.subj.reduce(function(a,s){return a+W[s.st]},0)/S.subj.length*100):0;
+ $("sSyl").textContent=p+"%";$("sylBar").style.width=p+"%";
+ $("sStreak").textContent=streakCalc();$("sHrs").textContent=Math.round(weekHrs()*10)/10;
+ $("setup").classList.toggle("hidden",S.subj.length>0);
+
+ $("logs").innerHTML=S.logs.slice().reverse().slice(0,8).map(function(l){return '<div class="item"><span class="tag">'+l.h+' h</span>'+esc(l.t||"Study")+' <span class="mut">'+l.date+'</span> <button class="ghost" data-d="logs" data-id="'+l.id+'" aria-label="Delete entry">Delete</button></div>'}).join("")||'<p class="mut">Nothing logged yet. Add your first session above.</p>';
+
+ var tg=S.goals.filter(function(g){return g.date===today()});
+ $("goals").innerHTML=tg.map(function(g){return '<div class="item"><label><input type="checkbox" data-g="'+g.id+'"'+(g.done?" checked":"")+'> '+(g.done?"<s>"+esc(g.t)+"</s>":esc(g.t))+'</label> <button class="ghost" data-d="goals" data-id="'+g.id+'" aria-label="Delete goal">Delete</button></div>'}).join("")||'<p class="mut">No goals set for today.</p>';
+
+ $("subjs").innerHTML=S.subj.map(function(s){return '<div class="subj"><span class="n">'+esc(s.n)+'</span><select data-s="'+s.id+'" aria-label="Status of '+esc(s.n)+'">'+ST.map(function(x,i){return '<option value="'+i+'"'+(i===s.st?" selected":"")+'>'+x+'</option>'}).join("")+'</select><button class="ghost" data-d="subj" data-id="'+s.id+'" aria-label="Remove '+esc(s.n)+'">Remove</button></div>'}).join("")||'<p class="mut">No subjects yet. Load your branch above or add one.</p>';
+
+ $("mocks").innerHTML=S.mocks.slice().reverse().map(function(m){var pc=m.t?Math.round(m.m/m.t*1000)/10:0;return '<div class="item"><span class="tag">'+m.m+'/'+m.t+' ('+pc+'%)</span><b>'+esc(m.n||"Mock")+'</b> <span class="mut">'+m.date+'</span>'+(m.w?'<div class="mut">Weak: '+esc(m.w)+'</div>':"")+' <button class="ghost" data-d="mocks" data-id="'+m.id+'" aria-label="Delete test">Delete</button></div>'}).join("");
+ if(S.mocks.length>1){var a=S.mocks[S.mocks.length-2],b=S.mocks[S.mocks.length-1],da=Math.round((b.m/b.t-a.m/a.t)*1000)/10;
+  $("mockTrend").textContent="Your last test was "+(da>=0?"up ":"down ")+Math.abs(da)+" points compared with the one before."}
+ $("errs").innerHTML=S.errs.slice().reverse().map(function(e){return '<div class="item"><span class="tag'+(e.k==="Silly mistake"?" bad":"")+'">'+esc(e.k)+'</span><b>'+esc(e.t||"General")+'</b> <span class="mut">'+e.date+'</span><div>'+esc(e.n)+'</div><button class="ghost" data-d="errs" data-id="'+e.id+'" aria-label="Delete mistake">Delete</button></div>'}).join("")||'<p class="mut">No mistakes logged yet. After each mock, note what went wrong here.</p>';
+}
+
+function tab(t){["today","syl","mock","err","alarm","tt","res"].forEach(function(x){$("t-"+x).classList.toggle("hidden",x!==t)});
+ document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.t===t)})}
+document.querySelector("nav").addEventListener("click",function(e){if(e.target.dataset.t)tab(e.target.dataset.t)});
+
+$("exam").addEventListener("change",function(){if(this.value){S.exam=this.value;save();render()}});
+$("addLog").onclick=function(){var h=parseFloat($("lh").value);if(!(h>0)){$("lh").focus();return}S.logs.push({id:uid(),date:today(),h:h,t:$("ls").value.trim()});$("lh").value="";$("ls").value="";save();render()};
+$("addGoal").onclick=function(){var v=$("gi").value.trim();if(!v)return;S.goals.push({id:uid(),date:today(),t:v,done:false});$("gi").value="";save();render()};
+$("loadB").onclick=function(){var b=$("branch").value;if(!b)return;S.subj=PRE[b].map(function(n){return{id:uid(),n:n,st:0}});save();render()};
+$("addSubj").onclick=function(){var v=$("ns").value.trim();if(!v)return;S.subj.push({id:uid(),n:v,st:0});$("ns").value="";save();render()};
+$("addMock").onclick=function(){var m=parseFloat($("mm").value),t=parseFloat($("mt").value);if(isNaN(m)||!(t>0)){$("mm").focus();return}S.mocks.push({id:uid(),date:today(),n:$("mn").value.trim(),m:m,t:t,w:$("mw").value.trim()});["mn","mm","mw"].forEach(function(i){$(i).value=""});save();render()};
+$("addErr").onclick=function(){var n=$("en").value.trim();if(!n){$("en").focus();return}S.errs.push({id:uid(),date:today(),t:$("et").value.trim(),k:$("ek").value,n:n});$("et").value="";$("en").value="";save();render()};
+
+document.body.addEventListener("click",function(e){var d=e.target.dataset;if(d&&d.d){del(S[d.d],parseFloat(d.id));save();render()}});
+document.body.addEventListener("change",function(e){var d=e.target.dataset;
+ if(d.s){S.subj.forEach(function(s){if(s.id===parseFloat(d.s))s.st=parseInt(e.target.value,10)});save();render()}
+ if(d.g){S.goals.forEach(function(g){if(g.id===parseFloat(d.g))g.done=e.target.checked});save();render()}
+ if(d.a){S.alarms.forEach(function(a){if(a.id===parseFloat(d.a))a.on=e.target.checked});save();render()}});
+
+var ctx,ringTimer;
+function unlock(){try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();ctx.resume()}catch(e){}}
+document.addEventListener("click",unlock);
+function beep(){unlock();if(!ctx)return;var n=0;clearInterval(ringTimer);function b(){var o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.25)}b();ringTimer=setInterval(function(){b();if(++n>40)stopRing()},600)}
+function stopRing(){clearInterval(ringTimer);$("ring").classList.add("hidden")}
+function fire(a){$("ringT").textContent=(a.l||"Study time")+" ("+a.t+")";$("ring").classList.remove("hidden");beep();try{if(window.Notification&&Notification.permission==="granted")new Notification("GATE prep",{body:a.l||"Study time"})}catch(e){}}
+function tick(){var d=new Date(),hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"),dt=today();S.alarms.forEach(function(a){if(a.on&&a.t===hm&&a.last!==dt&&!(a.w&&(d.getDay()===0||d.getDay()===6))){a.last=dt;save();fire(a)}})}
+function renderLinks(){$("links").innerHTML=S.links.map(function(l){return '<div class="item"><a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.n)+'</a> <button class="ghost" data-d="links" data-id="'+l.id+'" aria-label="Delete link">Delete</button></div>'}).join("")||'<p class="mut">Save your favourite tutorial or test links here.</p>'}
+function renderAlarms(){renderLinks();$("alarms").innerHTML=S.alarms.slice().sort(function(a,b){return a.t<b.t?-1:1}).map(function(a){return '<div class="item"><label><input type="checkbox" data-a="'+a.id+'"'+(a.on?" checked":"")+'> <b>'+a.t+'</b> '+esc(a.l||"")+'</label> <button class="ghost" data-d="alarms" data-id="'+a.id+'" aria-label="Delete alarm">Delete</button></div>'}).join("")||'<p class="mut">No alarms yet. Add one above.</p>'}
+$("addAlarm").onclick=function(){var t=$("at").value;if(!t)return;S.alarms.push({id:uid(),t:t,l:$("al").value.trim(),on:true,last:""});$("al").value="";save();render()};
+$("addTT").onclick=function(){[["05:00","Wake up, morning study block (Mon-Fri)",1],["13:00","Lunch: 20 min General Aptitude (Mon-Fri)",1],["21:15","PYQs on today's topic (Mon-Fri)",1],["22:45","Sleep",0]].forEach(function(x){if(!S.alarms.some(function(a){return a.l===x[1]}))S.alarms.push({id:uid(),t:x[0],l:x[1],on:true,w:!!x[2],last:""})});save();render();tab("alarm")};
+$("testAlarm").onclick=function(){fire({t:"test",l:"Test alarm"})};
+$("addLink").onclick=function(){var u=$("lu").value.trim(),n=$("ln").value.trim();if(!/^https?:\/\//i.test(u)){$("lu").focus();return}S.links.push({id:uid(),n:n||u,u:u});$("ln").value="";$("lu").value="";save();render()};
+$("stopRing").onclick=stopRing;
+$("notif").onclick=function(){try{Notification.requestPermission()}catch(e){}};
+load();S.alarms=S.alarms||[];S.links=S.links||[];render();tick();setInterval(tick,15000);
+})();
+</script>
+</body>
+</html>
